@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GA4 + GTM Playground</title>
+  </head>
+  <body>
+    <h1>Playground GA4 + GTM</h1>
+    <p>Use os botões abaixo para enviar eventos de teste para o GTM.</p>
+
+    <button onclick="sendEvent('button_click', { button_name: 'cta_topo' })">
+      CTA Topo
+    </button>
+
+    <button onclick="sendEvent('add_to_cart', { item_id: '123', item_name: 'Produto X', price: 29.9 })">
+      Adicionar ao Carrinho
+    </button>
+
+    <button onclick="sendEvent('purchase', { transaction_id: 'TX999', value: 59.9 })">
+      Finalizar Compra
+    </button>
+
+    <hr />
+
+    <button onclick="sendEvent('form_submit', { form_name: 'newsletter' })">
+      Enviar Formulário
+    </button>
+
+    <script>
+      // Inicializa o dataLayer
+      window.dataLayer = window.dataLayer || [];
+
+      function sendEvent(eventName, params = {}) {
+        window.dataLayer.push({
+          event: eventName,
+          ...params,
+        });
+        console.log('Evento enviado:', eventName, params);
+      }
+    </script>
+
+    <!-- Cole o container do GTM aqui -->
+    <!-- Exemplo:
+    <script>
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-XXXXXXX');
+    </script>
+    -->
+  </body>
+</html>

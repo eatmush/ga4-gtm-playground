@@ -1,11 +1,35 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-KBPG55VP");
+    </script>
+    <!-- End Google Tag Manager -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GA4 + GTM Playground</title>
   </head>
   <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-KBPG55VP"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <h1>Playground GA4 + GTM</h1>
     <p>Use os botões abaixo para enviar eventos de teste para o GTM.</p>
 
@@ -13,11 +37,15 @@
       CTA Topo
     </button>
 
-    <button onclick="sendEvent('add_to_cart', { item_id: '123', item_name: 'Produto X', price: 29.9 })">
+    <button
+      onclick="sendEvent('add_to_cart', { item_id: '123', item_name: 'Produto X', price: 29.9 })"
+    >
       Adicionar ao Carrinho
     </button>
 
-    <button onclick="sendEvent('purchase', { transaction_id: 'TX999', value: 59.9 })">
+    <button
+      onclick="sendEvent('purchase', { transaction_id: 'TX999', value: 59.9 })"
+    >
       Finalizar Compra
     </button>
 
@@ -36,7 +64,7 @@
           event: eventName,
           ...params,
         });
-        console.log('Evento enviado:', eventName, params);
+        console.log("Evento enviado:", eventName, params);
       }
     </script>
 

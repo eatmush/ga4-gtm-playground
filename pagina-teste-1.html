@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <!-- Consent Mode: inicialização reutilizável (ver consent-init.js) -->
+    <script src="consent-init.js"></script>
+
+    <!-- Google Tag Manager (reutilizável) -->
+    <script src="gtm-init.js" data-gtm-id="GTM-KBPG55VP"></script>
+    <!-- End Google Tag Manager -->
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <title>Página Teste 1 — Playground GA4 + GTM</title>
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-KBPG55VP"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <h1>Página Teste 1</h1>
+    <p>Esta é uma página de teste genérica.</p>
+    <p><a href="index.html">Voltar para a home</a></p>
+
+    <button onclick="sendEvent('page_test_1_click', { label: 'botao_teste_1' })">Enviar evento de teste</button>
+
+    <script src="script.js"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function sendEvent(eventName, params = {}) {
+        window.dataLayer.push({ event: eventName, ...params });
+        console.log('Evento enviado:', eventName, params);
+      }
+    </script>
+  </body>
+</html>

@@ -1,19 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
-    <!-- Google Tag Manager -->
-    <script>
-      (function (w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-        var f = d.getElementsByTagName(s)[0],
-          j = d.createElement(s),
-          dl = l != "dataLayer" ? "&l=" + l : "";
-        j.async = true;
-        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-        f.parentNode.insertBefore(j, f);
-      })(window, document, "script", "dataLayer", "GTM-KBPG55VP");
-    </script>
+    <!-- Consent Mode: inicialização reutilizável (ver consent-init.js) -->
+    <script src="consent-init.js"></script>
+
+    <!-- Google Tag Manager (reutilizável) -->
+    <script src="gtm-init.js" data-gtm-id="GTM-KBPG55VP"></script>
     <!-- End Google Tag Manager -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -32,6 +24,23 @@
     ></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <h1>Playground GA4 + GTM</h1>
+    <!-- Navegação para páginas de teste -->
+    <nav style="margin:12px 0">
+      <a href="pagina-teste-1.html" style="margin-right:12px">Página Teste 1</a>
+      <a href="pagina-teste-2.html" style="margin-right:12px">Página Teste 2</a>
+      <a href="pagina-teste-3.html">Página Teste 3</a>
+    </nav>
+    <!-- Banner simples de consentimento -->
+    <div id="consent-banner" style="position:fixed;left:16px;right:16px;bottom:16px;background:#fff;border:1px solid #ddd;padding:12px 16px;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.08);z-index:9999;display:flex;align-items:center;gap:12px">
+      <div style="flex:1">
+        <strong>Usamos cookies para melhorar sua experiência</strong>
+        <div style="font-size:0.95rem;color:#444">Podemos usar cookies para medição e anúncios. Você pode aceitar ou recusar.</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button id="consent-accept" style="background:#1a73e8;color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer">Aceitar</button>
+        <button id="consent-decline" style="background:#f1f3f4;color:#222;border:none;padding:8px 12px;border-radius:6px;cursor:pointer">Recusar</button>
+      </div>
+    </div>
     <p>Use os botões abaixo para enviar eventos de teste para o GTM.</p>
 
     <button onclick="sendEvent('button_click', { button_name: 'cta_topo' })">
@@ -55,6 +64,8 @@
     <button onclick="sendEvent('form_submit', { form_name: 'newsletter' })">
       Enviar Formulário
     </button>
+
+    <script src="script.js"></script>
 
     <script>
       // Inicializa o dataLayer

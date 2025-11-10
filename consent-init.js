@@ -10,16 +10,42 @@
       var state = JSON.parse(stored);
       window.dataLayer.push({ event: 'consent_default', consent: state });
     } else {
-      window.dataLayer.push({
-        event: 'consent_default',
-        consent: { analytics_storage: 'denied', ad_storage: 'denied' }
-      });
+      var defaultState = {
+        analytics_storage: 'denied',
+        ad_storage: 'denied',
+        ad_personalization: 'denied',
+        ad_user_data: 'denied'
+      };
+      window.dataLayer.push({ event: 'consent_default', consent: defaultState });
     }
   } catch (e) {
     // em caso de erro, negar por padrão
     window.dataLayer.push({
       event: 'consent_default',
-      consent: { analytics_storage: 'denied', ad_storage: 'denied' }
+      consent: {
+        analytics_storage: 'denied',
+        ad_storage: 'denied',
+        ad_personalization: 'denied',
+        ad_user_data: 'denied'
+      }
     });
   }
+
+  // Helper global para aplicar um estado de consentimento (usa localStorage + dataLayer)
+  window.applyConsent = function (state) {
+    try {
+      localStorage.setItem('ga_consent', JSON.stringify(state));
+    } catch (e) {
+      // ignore storage errors
+    }
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: 'consent_update', consent: state });
+    if (typeof gtag === 'function') {
+      try {
+        gtag('consent', 'update', state);
+      } catch (e) {
+        // ignore
+      }
+    }
+  };
 })();

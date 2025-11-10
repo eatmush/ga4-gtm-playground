@@ -30,15 +30,23 @@
       <a href="pagina-teste-2.html" style="margin-right:12px">Página Teste 2</a>
       <a href="pagina-teste-3.html">Página Teste 3</a>
     </nav>
-    <!-- Banner simples de consentimento -->
+    <!-- Banner de consentimento com escolhas granulares -->
     <div id="consent-banner" style="position:fixed;left:16px;right:16px;bottom:16px;background:#fff;border:1px solid #ddd;padding:12px 16px;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.08);z-index:9999;display:flex;align-items:center;gap:12px">
       <div style="flex:1">
         <strong>Usamos cookies para melhorar sua experiência</strong>
-        <div style="font-size:0.95rem;color:#444">Podemos usar cookies para medição e anúncios. Você pode aceitar ou recusar.</div>
+        <div style="font-size:0.95rem;color:#444;margin-top:6px">Selecione quais tipos de dados você autoriza que sejam coletados. As escolhas serão salvas no seu navegador.</div>
+
+        <div style="margin-top:8px;display:flex;gap:12px;flex-wrap:wrap">
+          <label style="font-size:0.95rem;display:flex;align-items:center;gap:8px"><input type="checkbox" id="consent-checkbox-analytics"> analytics_storage</label>
+          <label style="font-size:0.95rem;display:flex;align-items:center;gap:8px"><input type="checkbox" id="consent-checkbox-ad"> ad_storage</label>
+          <label style="font-size:0.95rem;display:flex;align-items:center;gap:8px"><input type="checkbox" id="consent-checkbox-ad-personalization"> ad_personalization</label>
+          <label style="font-size:0.95rem;display:flex;align-items:center;gap:8px"><input type="checkbox" id="consent-checkbox-ad-user-data"> ad_user_data</label>
+        </div>
       </div>
       <div style="display:flex;gap:8px">
-        <button id="consent-accept" style="background:#1a73e8;color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer">Aceitar</button>
-        <button id="consent-decline" style="background:#f1f3f4;color:#222;border:none;padding:8px 12px;border-radius:6px;cursor:pointer">Recusar</button>
+        <button id="consent-save" style="background:#0f9d58;color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer">Salvar escolhas</button>
+        <button id="consent-accept" style="background:#1a73e8;color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer">Aceitar todos</button>
+        <button id="consent-decline" style="background:#f1f3f4;color:#222;border:none;padding:8px 12px;border-radius:6px;cursor:pointer">Recusar todos</button>
       </div>
     </div>
     <p>Use os botões abaixo para enviar eventos de teste para o GTM.</p>

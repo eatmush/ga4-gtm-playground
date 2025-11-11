@@ -2,7 +2,147 @@
 // - Permite escolhas granulares para as 4 variáveis: analytics_storage, ad_storage, ad_personalization, ad_user_data
 // - Persiste em localStorage, empurra para dataLayer e atualiza gtag se presente
 
-console.log('script.js carregado - consent helpers inicializados');
+// Login Manager - rastreia autenticação com GTM/dataLayer
+window.AuthManager = (function () {
+	var storageKey = 'ga_auth';
+	var defaultTestUser = { email: 'usuario@teste.com', password: 'senha123' };
+
+	function getAuthState() {
+		try {
+			var stored = localStorage.getItem(storageKey);
+			return stored ? JSON.parse(stored) : null;
+		} catch (e) {
+			return null;
+		}
+	}
+
+	function setAuthState(user) {
+		try {
+			localStorage.setItem(storageKey, JSON.stringify({ email: user.email, timestamp: Date.now() }));
+		} catch (e) {
+			// ignore storage errors
+		}
+	}
+
+	function clearAuthState() {
+		try {
+			localStorage.removeItem(storageKey);
+		} catch (e) {
+			// ignore
+		}
+	}
+
+	function pushEvent(eventName, params) {
+		window.dataLayer = window.dataLayer || [];
+		window.dataLayer.push({
+			event: eventName,
+			...params
+		});
+		console.log('Evento de autenticação:', eventName, params);
+	}
+
+	function login(email, password) {
+		// Validação simples (apenas para teste)
+		if (email === defaultTestUser.email && password === defaultTestUser.password) {
+			setAuthState({ email: email });
+			pushEvent('login', { method: 'email', email: email });
+			return { success: true };
+		} else {
+			pushEvent('login_failed', { method: 'email', email: email, reason: 'invalid_credentials' });
+			return { success: false, error: 'Email ou senha incorretos' };
+		}
+	}
+
+	function logout() {
+		var authState = getAuthState();
+		if (authState) {
+			clearAuthState();
+			pushEvent('logout', { email: authState.email });
+		}
+	}
+
+	function isAuthenticated() {
+		return getAuthState() !== null;
+	}
+
+	function getCurrentUser() {
+		return getAuthState();
+	}
+
+	function updateAuthUI() {
+		var container = document.getElementById('auth-container');
+		if (!container) return;
+
+		var isAuth = isAuthenticated();
+		var currentUser = getCurrentUser();
+
+		container.innerHTML = '';
+
+		if (isAuth && currentUser) {
+			var userSpan = document.createElement('span');
+			userSpan.textContent = currentUser.email;
+			userSpan.style.fontSize = '0.9rem';
+			userSpan.style.color = '#666';
+			container.appendChild(userSpan);
+
+			var logoutBtn = document.createElement('button');
+			logoutBtn.textContent = 'Sair';
+			logoutBtn.style.background = '#f1f3f4';
+			logoutBtn.style.color = '#222';
+			logoutBtn.style.border = 'none';
+			logoutBtn.style.padding = '8px 12px';
+			logoutBtn.style.borderRadius = '6px';
+			logoutBtn.style.cursor = 'pointer';
+			logoutBtn.onclick = function () {
+				logout();
+				updateAuthUI();
+			};
+			container.appendChild(logoutBtn);
+		} else {
+			var loginBtn = document.createElement('button');
+			loginBtn.textContent = 'Login';
+			loginBtn.style.background = '#1a73e8';
+			loginBtn.style.color = '#fff';
+			loginBtn.style.border = 'none';
+			loginBtn.style.padding = '8px 12px';
+			loginBtn.style.borderRadius = '6px';
+			loginBtn.style.cursor = 'pointer';
+			loginBtn.onclick = function () {
+				showLoginModal();
+			};
+			container.appendChild(loginBtn);
+		}
+	}
+
+	return {
+		login: login,
+		logout: logout,
+		isAuthenticated: isAuthenticated,
+		getCurrentUser: getCurrentUser,
+		updateAuthUI: updateAuthUI,
+		getAuthState: getAuthState
+	};
+})();
+
+function showLoginModal() {
+	var modal = document.getElementById('login-modal');
+	if (modal) {
+		modal.style.display = 'flex';
+		document.getElementById('login-email').value = '';
+		document.getElementById('login-password').value = '';
+		document.getElementById('login-error').style.display = 'none';
+		document.getElementById('login-email').focus();
+	}
+}
+
+function closeLoginModal() {
+	var modal = document.getElementById('login-modal');
+	if (modal) {
+		modal.style.display = 'none';
+	}
+}
+
+console.log('script.js carregado - consent helpers e auth manager inicializados');
 
 (function () {
 	window.dataLayer = window.dataLayer || [];
@@ -144,3 +284,75 @@ console.log('script.js carregado - consent helpers inicializados');
 	}
 
 })();
+
+// Inicializa UI de autenticação e handlers do modal de login
+(function initAuthUI() {
+	function attachLoginHandlers() {
+		var loginBtn = document.getElementById('login-btn');
+		var cancelBtn = document.getElementById('login-cancel-btn');
+		var modal = document.getElementById('login-modal');
+		var emailInput = document.getElementById('login-email');
+		var passwordInput = document.getElementById('login-password');
+		var errorDiv = document.getElementById('login-error');
+
+		if (!loginBtn || !cancelBtn) return;
+
+		// Atualiza UI inicial de auth
+		window.AuthManager.updateAuthUI();
+
+		// Submeter login via botão
+		loginBtn.addEventListener('click', function () {
+			var email = (emailInput && emailInput.value) ? emailInput.value.trim() : '';
+			var password = (passwordInput && passwordInput.value) ? passwordInput.value : '';
+
+			if (!email || !password) {
+				if (errorDiv) {
+					errorDiv.textContent = 'Email e senha são obrigatórios';
+					errorDiv.style.display = 'block';
+				}
+				return;
+			}
+
+			var result = window.AuthManager.login(email, password);
+			if (result.success) {
+				closeLoginModal();
+				window.AuthManager.updateAuthUI();
+			} else {
+				if (errorDiv) {
+					errorDiv.textContent = result.error || 'Erro ao fazer login';
+					errorDiv.style.display = 'block';
+				}
+			}
+		});
+
+		// Submeter login via Enter
+		if (passwordInput) {
+			passwordInput.addEventListener('keypress', function (e) {
+				if (e.key === 'Enter') {
+					loginBtn.click();
+				}
+			});
+		}
+
+		// Cancelar
+		cancelBtn.addEventListener('click', function () {
+			closeLoginModal();
+		});
+
+		// Fechar modal ao clicar fora
+		if (modal) {
+			modal.addEventListener('click', function (e) {
+				if (e.target === modal) {
+					closeLoginModal();
+				}
+			});
+		}
+	}
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', attachLoginHandlers);
+	} else {
+		attachLoginHandlers();
+	}
+})();
+

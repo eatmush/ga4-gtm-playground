@@ -73,6 +73,13 @@
       Enviar Formulário
     </button>
 
+    <!-- Campo para digitar e enviar 'select_content' -->
+    <div style="margin-top:12px;display:flex;align-items:center;gap:8px">
+      <label for="content-input" style="font-weight:600">Conteúdo:</label>
+      <input id="content-input" type="text" placeholder="Digite o tipo de conteúdo..." style="padding:6px 8px;border:1px solid #ccc;border-radius:6px;min-width:220px">
+      <button id="send-content-btn" style="background:#1a73e8;color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer">Enviar</button>
+    </div>
+
     <script src="script.js"></script>
 
     <script>
@@ -86,6 +93,22 @@
         });
         console.log("Evento enviado:", eventName, params);
       }
+
+      // Handler para enviar evento select_content com content_type vindo do campo de texto
+      (function attachSelectContentHandler() {
+        var btn = document.getElementById('send-content-btn');
+        if (!btn) return;
+        btn.addEventListener('click', function () {
+          var input = document.getElementById('content-input');
+          var val = (input && input.value) ? String(input.value) : '';
+          if (!val.trim()) {
+            // Mantemos o padrão de debug do projeto
+            console.log('Nenhum conteúdo digitado. Evento select_content não enviado.');
+            return;
+          }
+          sendEvent('select_content', { content_type: val });
+        });
+      })();
     </script>
   </body>
 </html>
